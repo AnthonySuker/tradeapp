@@ -1,0 +1,1 @@
+A private project exploring trade algorithms and simulation of stock buy/sell
