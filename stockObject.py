@@ -2,7 +2,7 @@ class stockObject:
     algoVars = {}
     high = []
     low = []
-    vol
+    vol = []
     close = []
 
     def __init__ (self):
