@@ -36,7 +36,7 @@ class Ichimoku(baseAlgorithm):
 
         spanB = (max(self.high[-78:-26]) + min(self.low[-78-26]))*0.5
 
-        self.confidence = ((100/math.pi)*math.atan(spanA-spanB))+50
+        self.confidence = ((100/math.pi)*math.atan((spanA-spanB)*16/self.close[-1]))+50
 
 
     ##This is from the example too
