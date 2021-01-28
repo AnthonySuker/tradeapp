@@ -1,5 +1,9 @@
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import yfinance as yf
 import math
+
 
 # This is the base class, shouldn't need to do much to it
 # Just loads relevant data structures 
@@ -15,6 +19,8 @@ class baseAlgorithm:
         self.vol = data[2]
         self.close = data[3]
 
+    def graph(self):
+        print('Base Algorithm reached')
 
 
 # A really complex algorithm
@@ -38,6 +44,7 @@ class volumeIncrease(baseAlgorithm):
         super(volumeIncrease, self).__init__(data)
         self.run()
     
+
 
 #theres more comments in controller @ line 30
 
@@ -63,6 +70,48 @@ class Ichimoku(baseAlgorithm):
 
         print("Algorithm Confidence is:",end=' ')
         print(self.confidence)
+
+    #this will be a graph of the last 100 days
+    def graph(self):
+        conversion_line = []
+        base_line = []
+        leading_span_a = []
+        leading_span_b = []
+        lagging_span = []
+        length = len(self.high)
+
+        marker = 0
+
+        for i in range(length-100, length):
+            conversion_line.append((max(self.high[i-9:i]) + max(self.low[i-9:i]))*0.5)
+            base_line.append((max(self.high[i-26:i]) + min(self.low[i-26:i]))*0.5)
+            leading_span_a.append((((max(self.high[i-9-26:i-26]) + max(self.low[i-9-26:i-26]))*0.5 \
+            + (max(self.high[i-26-26:i-26]) + min(self.low[i-26-26:i-26]))*0.5))*0.5)
+            leading_span_b.append((max(self.high[i-52-26:i-26]) + min(self.low[i-52-26:i-26]))*0.5)
+
+            if marker > 26:
+                lagging_span.append(close[i])
+
+            marker += 1
+
+        charts_dict = {
+        "Conversion Line" : pd.Series(conversion_line), \
+        "Base Line" : pd.Series(base_line), \
+        "Leading Span A" : pd.Series(leading_span_a), \
+        "Leading Span B" : pd.Series(leading_span_b), \
+        "Lagging Span" : pd.Series(lagging_span), \
+        }
+
+        plt.plot(charts_dict['Leading Span A'],label='Leading Span A')
+        plt.plot(charts_dict['Leading Span B'],label='Leading Span B')
+        plt.plot(charts_dict['Conversion Line'], label='Conversion Line')
+        plt.plot(range(0, 100), self.close[-100:],label='Close Price')
+        plt.plot(charts_dict['Base Line'],label='Base Line')
+        plt.plot(charts_dict['Lagging Span'],label='Lagging Span')
+        plt.fill_between(range(0, 100), Ichimoku['Leading Span A'], Ichimoku['Leading Span B'], color='g')
+        plt.legend()
+
+        plt.show()
 
 
     ##This is from the example too
