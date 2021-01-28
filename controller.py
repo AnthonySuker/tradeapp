@@ -33,7 +33,7 @@ def printTracker():
 def applyAlgo():
     stockID = input("Enter Stock ID: ")
     temp = st.getStockData(stockID)
-    alg.volumeIncrease(temp)
+    alg.Ichimoku(temp)
     
 
 
