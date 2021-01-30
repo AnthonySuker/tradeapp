@@ -33,7 +33,8 @@ def printTracker():
 def applyAlgo():
     stockID = input("Enter Stock ID: ")
     temp = st.getStockData(stockID)
-    alg.Ichimoku(temp)
+    t = alg.Ichimoku(temp)
+    t.graph()
     
 
 
