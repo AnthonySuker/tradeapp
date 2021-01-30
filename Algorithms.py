@@ -51,6 +51,7 @@ class volumeIncrease(baseAlgorithm):
 
 class Ichimoku(baseAlgorithm):
     def run(self):
+        self.order = 'Stay'
 
         ##Deciding to buy, sell or stay
         conversion1 = (max(self.high[-9:] + max(self.low[-9:])))*0.5
@@ -68,6 +69,9 @@ class Ichimoku(baseAlgorithm):
 
         self.confidence = ((100/math.pi)*math.atan(spanA-spanB))+50
 
+
+        print('IKH says:',end='')
+        print(self.order)
         print("Algorithm Confidence is:",end=' ')
         print(self.confidence)
 
@@ -90,7 +94,7 @@ class Ichimoku(baseAlgorithm):
             leading_span_b.append((max(self.high[i-52-26:i-26]) + min(self.low[i-52-26:i-26]))*0.5)
 
             if marker > 26:
-                lagging_span.append(close[i])
+                lagging_span.append(self.close[i])
 
             marker += 1
 
@@ -107,8 +111,9 @@ class Ichimoku(baseAlgorithm):
         plt.plot(charts_dict['Conversion Line'], label='Conversion Line')
         plt.plot(range(0, 100), self.close[-100:],label='Close Price')
         plt.plot(charts_dict['Base Line'],label='Base Line')
-        plt.plot(charts_dict['Lagging Span'],label='Lagging Span')
-        plt.fill_between(range(0, 100), Ichimoku['Leading Span A'], Ichimoku['Leading Span B'], color='g')
+        #Add this if you want the lagging span, to me it is pretty irrelevant
+        # plt.plot(charts_dict['Lagging Span'],label='Lagging Span')
+        plt.fill_between(range(0, 100), charts_dict['Leading Span A'], charts_dict['Leading Span B'], color='g')
         plt.legend()
 
         plt.show()
